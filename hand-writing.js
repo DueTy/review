@@ -74,27 +74,3 @@ Array.prototype.cusFlat = function() {
         return prev.concat(Array.isArray(item) ? Array.prototype.cusFlat.call(item) : item)
     }, [])
 }
-
-
-// 快排
-function quickSort(arr) {
-    if (!arr.length) {
-        return
-    }
-
-    const midIndex = Math.floor(arr.length / 2)
-    const mid = arr[midIndex]
-
-    const leftArr = []
-    const rightArr = []
-
-    for(let i=0; i<arr.length; i++) {
-        if (arr[i] < mid) {
-            leftArr.push(arr[i])
-        } else {
-            rightArr.push(arr[i])
-        }
-    }
-
-    return quickSort(leftArr).concat(quickSort(rightArr))
-}
