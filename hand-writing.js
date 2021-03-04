@@ -1,3 +1,5 @@
+const extend = require("extend")
+
 // 手写call
 Function.prototype.cusCall = function(context) {
     if (typeof this !== 'function') {
@@ -53,6 +55,8 @@ function cusNew() {
     return result instanceof Object ? result : obj
 }
 
+const a = cusNew(function A(){})
+
 // 手写instanceof
 function cusInstanceOf(a, b) {
     let prototype = b.prototype
@@ -72,5 +76,144 @@ function cusInstanceOf(a, b) {
 Array.prototype.cusFlat = function() {    
     return this.reduce((prev, item) => {
         return prev.concat(Array.isArray(item) ? Array.prototype.cusFlat.call(item) : item)
+    }, [])
+}
+
+class EventEmitter {
+    constructor() {
+        this.handlers = {}
+    }
+
+    on(eventName, cb) {
+        if (!this.handlers[eventName]) {
+            this.handlers[eventName] = []
+        }
+        this.handlers[eventName].push(cb)
+    }
+
+    emit(eventName, ...agrs) {
+        if (this.handlers[eventName]) {
+            this.handlers.eventName.forEach(cb => {
+                cb(...agrs)
+            })
+        }
+    }
+
+    off(eventName, cb) {
+        if (this.handlers[eventName]) {
+            const cbs = this.handlers[eventName]
+            const index = cbs.indexOf(cb)
+            if (index !== -1) {
+                cbs.splice(index, 1)
+            }
+        }
+    }
+
+    once(eventName, cb) {
+        const wrapper = (...agrs) => {
+            cb.apply(...agrs)
+            this.off(eventName, wrapper)
+        }
+
+        this.on(eventName, wrapper)
+    }
+}
+
+
+// 理解原型链和类，继承
+function A() {}
+A.prototype.sayHi = function () { console.log('hello') }
+
+
+const a = new A()
+
+function B() { A.call(this) }
+B.prototype = new A()
+B.prototype.__proto__ =  A.prototype
+
+const b = new B()
+
+b instanceof Object
+
+class C {
+    static sayHi() { console.log('hi, I‘m Csss') }
+    sayHi() { console.log('hi, I‘m C') }
+}
+
+class D extends C{
+    sayHi() { console.log('hi, I‘m D') }
+}
+
+const d = new D()
+
+function throttle(fn, delay) {
+    let last = 0
+
+    return function() {
+        const context = this
+        const agrs = arguments
+        
+        let now = +new Date()
+        if (now - last > delay) {
+            last = now
+            fn.apply(context, agrs)
+        }
+    }
+}
+
+function debounce(fn, delay) {
+    let timer = null
+
+    return function() {
+        const context = this
+        const agrs = arguments
+
+        if (timer) {
+            clearTimeout(timer)
+            timer = null
+        }
+
+        timer = setTimeout(() => {
+            fn.apply(context, args)
+        }, delay);
+    }
+}
+
+function debounceV2(fn, delay) {
+    let last = 0
+    let timer = null
+
+    return function() {
+        const context = this
+        const agrs = arguments
+        let now = +new Date()
+
+        if (now - last < delay) {
+            // 如果执行时间小于间隔时间
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                fn.apply(context, agrs)
+            }, delay);
+        } else { // 如果大于就不等了
+            last = now
+            fn.apply(context, agrs)
+        }
+    }
+}
+
+Array.prototype.cusReduce = function (callback, initValue) {
+    let arr = this
+
+    let prev = initValue || this[0]
+    let startIndex = prev ? 0 : 1
+    for (let i = startIndex; i < arr.length; i++) {
+        prev = callback(prev || arr[1], this[i], i, arr)
+    }
+    return prev
+}
+
+Array.prototype.cusFlat = function() {
+    return this.reduce((prev, cur) => {
+        return prev.concat(Array.isArray(cur) ? Array.prototype.cusFlat.call(cur) : cur)
     }, [])
 }

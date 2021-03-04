@@ -52,18 +52,37 @@ function quickSort(arr) {
     
     const left = []
     const right = []
-    const pivotIndex = Math.floor(arr.length / 2)
+    const pivotIndex = arr.length >> 1
     let pivot = arr.splice(pivotIndex, 1)
     
     for (let i = 0; i < arr.length; i++) {
         arr[i] < pivot ? left.push(arr[i]) : right.push(arr[i])
     }
 
-    return quickSort(left).concat([pivot], quickSort(right))
+    return quickSort(left).concat(pivot, quickSort(right))
 }
 
 
-const a = [11,4,66,215,5334,123,23,1,6,8]
+const a = [11, 4, 66, 215, 5334, 123, 23, 1, 6, 8]
 
-bubbleSort(a)
-console.log(a)
+// bubbleSort(a)
+// console.log(a)
+
+// function quickSort(arr) {
+//     if (!Array.isArray(arr)) {
+//         return []
+//     }
+
+//     let left = []
+//     let right = []
+//     const pivotIndex = arr.length >> 1
+//     let pivot = arr.splice(pivotIndex, 1)
+    
+//     for (let i = 0; i < arr.length; i++) {
+//         arr[i] < pivot ? left.push(arr[i]) : right.push(arr[i])
+//     }
+
+//     return quickSort(left).concat([pivot], quickSort(right))
+// }
+
+console.log(quickSort([11, 4, 66, 215, 5334, 123, 23, 1, 6, 8]))
