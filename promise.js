@@ -60,3 +60,4 @@ new cusPromise((resolve, reject) => {
 }).then(res => {
     console.log('res is', res)
 })
+

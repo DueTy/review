@@ -5,7 +5,7 @@ Father.prototype.sayHi = function() { console.log('hi, I"m father') }
 function Child () {}
 
 Child.prototype = new Father()
-// Child.prototype.constructor = Child
+Child.prototype.constructor = Child
 Child.prototype.sayHi = function() { console.log("hi, I'm child") }
 
 const c = new Child()

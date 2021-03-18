@@ -203,17 +203,24 @@ function debounceV2(fn, delay) {
 
 Array.prototype.cusReduce = function (callback, initValue) {
     let arr = this
+    let prev = initValue || arr[0]
+    let startIndex = initValue ? 0 : 1
 
-    let prev = initValue || this[0]
-    let startIndex = prev ? 0 : 1
     for (let i = startIndex; i < arr.length; i++) {
-        prev = callback(prev || arr[1], this[i], i, arr)
+        prev = callback(prev, arr[i], i, arr)
     }
     return prev
 }
+let r1 = [1,2,3,4].cusReduce(function(prev, cur, curIndex, arr) {
+    return prev + cur
+}, 22)
+
+console.log(r1);
 
 Array.prototype.cusFlat = function() {
     return this.reduce((prev, cur) => {
         return prev.concat(Array.isArray(cur) ? Array.prototype.cusFlat.call(cur) : cur)
     }, [])
 }
+
+
