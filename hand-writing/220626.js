@@ -66,4 +66,4 @@ function throttle(fn, delay) {
   };
 }
 
-function debounce() {}
+function debounce() { }
